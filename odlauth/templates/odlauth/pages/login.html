@@ -1,0 +1,31 @@
+{% extends "_base.html" %}
+
+
+{% block title %}
+    Loign -
+{% endblock  %}
+    
+
+{% block main %}
+<section class="bg-white dark:bg-gray-900 bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/hero-pattern.svg')] dark:bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/hero-pattern-dark.svg')]">
+    <div class="py-8 px-4 mx-auto max-w-screen-xl text-center lg:py-16 z-10 relative">
+        
+        <h1 class="mb-4 text-4xl font-extrabold tracking-tight leading-none text-gray-900 md:text-5xl lg:text-6xl dark:text-white">Login</h1>
+        
+        <form method="post" action="{% url 'odlauth:account_login' %}" class=" max-w-md mx-auto ">   
+            
+            {% csrf_token %}
+            <div class="grid grid-cols-1 md:grid-cols-1 gap-4 w-full mb-5">
+                {{form}}
+            </div>
+
+            <input type="hidden" name="next" value="{{ next }}">
+
+            <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Login</button>
+
+        </form>
+    </div>
+    <div class="bg-gradient-to-b from-blue-50 to-transparent dark:from-blue-900 w-full h-full absolute top-0 left-0 z-0"></div>
+</section>
+{% endblock  %}
+    
