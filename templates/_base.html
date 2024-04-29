@@ -13,7 +13,20 @@
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
 
 </head>
-<body>
+<body class="relative">
+
+    
+    {% if messages %}
+        
+        {% for message in messages %}
+            <p class="absolute z-50">
+                {{message}}
+            </p>
+        {% endfor %}
+            
+    {% endif %}
+        
+        
     
     <header>
         {% include 'components/navbar.html' %}
@@ -24,7 +37,7 @@
             
     </header>
 
-    <main>
+    <main class="max-w-screen-xl mx-auto p-4">
         {% block main %}
             
         {% endblock %}

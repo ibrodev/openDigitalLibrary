@@ -1,21 +1,45 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views import View
-from django.http import HttpResponseRedirect, HttpResponseNotFound
+from django.http import HttpResponseRedirect, HttpResponseNotFound, HttpResponse, Http404
 from django.urls import reverse
 from django.contrib.auth.views import LoginView
-from django.contrib.auth import logout as dlogout
+from django.contrib.auth import logout as dlogout, authenticate, login
+from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.decorators.cache import cache_control
+from django.utils.encoding import force_str
+from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+from django.contrib.auth.decorators import login_required
+from django.contrib.sites.shortcuts import get_current_site
 
+from .utils import TokenGenerator, send_activation_email
 from .forms import AuthorUserForm, AuthorForm, EmailAccountForm, PublisherForm, PublisherUserForm, PhoneNumberForm, UserAuthenticationForm
+from .models import User, Author, Publisher, EmailAccount, PhoneNumber, Profile
+from .tasks import send_activation_link
 
+@cache_control(no_cache=True, must_revalidate=True)
 def logout(request):
     dlogout(request)
     return HttpResponseRedirect(reverse('index'))
+
+@login_required()
+def activate_account(request, token):
+    
+    user = request.user
+        
+    if user and TokenGenerator().check_token(user=user, token=token):
+        email = user.email
+        email.is_confirmed = True
+        email.save()
+        
+        messages.add_message(request=request, level=messages.SUCCESS, message='Congratulations! Your account is activated.')
+        
+        return redirect(reverse('odlauth:account'))
 
 class UserLoginView(LoginView):
     template_name = 'odlauth/pages/login.html'
     authentication_form = UserAuthenticationForm
     redirect_authenticated_user = True
-
         
 class AccountView(View):
     
@@ -77,8 +101,24 @@ class AuthorAccountView(View):
             user.email = email
             user.save()
             
-            return HttpResponseRedirect(reverse("index"))
-
+            user = authenticate(request, username=user.username, password=user_form.cleaned_data['password1'])
+            # send_activation_email(user, request)
+            
+            send_activation_link.delay({
+                'username': user.get_username(), 
+                'email': user.email.email,
+                'domain': get_current_site(request).domain,
+                'token': TokenGenerator().make_token(user=user)
+            })
+            
+            if user is not None:
+                login(request, user)
+            
+                messages.success(request, "Welcome! please confirm your email address")
+                return HttpResponseRedirect(reverse("odlauth:account"))
+            else:
+                messages.error(request, "Error can't login with the registered user")
+                
         return render(
             request, 
             'odlauth/pages/registration.html',
@@ -130,7 +170,23 @@ class PublisherAccountView(View):
             user.email = email
             user.save()
             
-            return HttpResponseRedirect(reverse("index"))
+            user = authenticate(request, username=user.username, password=user_form.cleaned_data['password1'])
+            result = send_activation_link.delay({
+                'username': user.get_username(), 
+                'email': user.email.email,
+                'domain': get_current_site(request).domain,
+                'token': TokenGenerator().make_token(user=user)
+            })
+            
+            print(result.backend)
+            
+            if user is not None:
+                login(request, user)
+            
+                messages.success(request, "Welcome! please confirm your email address")
+                return HttpResponseRedirect(reverse("odlauth:account"))
+            else:
+                messages.error(request, "Error can't login with the registered user")
 
         return render(
             request, 
@@ -142,3 +198,10 @@ class PublisherAccountView(View):
                 "url": "odlauth:new_account_publisher"
             }
         )
+        
+
+class UserAccountView(LoginRequiredMixin,View):
+    
+    def get(self, request, *args, **kwargs):       
+        
+        return render(request, 'odlauth/pages/account.html')

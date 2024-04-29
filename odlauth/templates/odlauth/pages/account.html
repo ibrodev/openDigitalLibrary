@@ -1,0 +1,88 @@
+{% extends "_base.html" %}
+{% load static %}
+
+
+{% block title %}
+    {{user.get_username}} -
+{% endblock  %}
+    
+
+{% block main %}
+<div class="flex gap-8">
+
+    
+    <aside class="relative w-max">
+            <ul class=" border sticky top-4 p-2 list-none w-max" aria-labelledby="side-menu">
+                <li class="w-full min-w-52">
+                  <a href="{% url 'odlauth:account' %}" class="block px-10 py-2 text-sm text-gray-700 hover:bg-gray-100 ">Account</a>
+                </li>
+                <li class="w-full min-w-52">
+                    <a href="{% url 'odlauth:account' %}" class="block px-10 py-2 text-sm text-gray-700 hover:bg-gray-100 ">Books</a>
+                  </li>
+              </ul>
+    </aside>
+
+    <div class="flex-grow">
+
+        <div class="flex gap-4 mb-8">
+            <div class="w-48 aspect-square h-auto object-contain border rounded-lg overflow-hidden">
+                <img src=" 
+                {% if user.is_author %}
+                    {% static 'imgs/author-default-avator.png' %}
+                {% else %}
+                    {% static 'imgs/publisher-default-avator.png' %}
+                {% endif %}
+                 " alt="profile picture" class="w-full">
+            </div>
+            <div class="flex flex-col justify-end">
+                <span class="bg-blue-100 text-blue-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded w-max">{{user.get_username}}</span>
+                <h1 class="text-4xl font-extrabold">
+                        {% if user.is_author %}
+                            {{user.email.author.first_name.upper}} {{user.email.author.last_name.upper}}
+                        {% else %}
+                            {{user.email.publisher.name.upper}}        
+                        {% endif %}
+                    </h1>
+                    <p>
+                        {{user.email}}
+                    </p>
+                    {% if user.is_author %}
+                        <p>
+                            {{user.email.author.phone_no}}
+                        </p>
+                    {% endif %}
+            </div>
+        </div>
+
+        {% if not user.email.is_confirmed %}
+        <div id="alert-additional-content-1" class="p-4 mb-4 text-yellow-800 border border-yellow-300 rounded-lg bg-yellow-50 " role="alert">
+            <div class="flex items-center">
+              <svg class="flex-shrink-0 w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+              </svg>
+              <span class="sr-only">Info</span>
+              <h3 class="text-lg font-medium">Account activation required!</h3>
+            </div>
+            <div class="mt-2 mb-4 text-sm">
+            We have sent an activation link to <span class="font-semibold">{{user.email}}</span>. Please follow the link to activate your account.
+            </div>
+            <div class="flex">
+              {% comment %} <button type="button" class="text-white bg-yellow-800 hover:bg-yellow-900 focus:ring-4 focus:outline-none focus:ring-yellow-200 font-medium rounded-lg text-xs px-3 py-1.5 me-2 text-center inline-flex items-center ">
+                <svg class="me-2 h-3 w-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 14">
+                  <path d="M10 0C4.612 0 0 5.336 0 7c0 1.742 3.546 7 10 7 6.454 0 10-5.258 10-7 0-1.664-4.612-7-10-7Zm0 10a3 3 0 1 1 0-6 3 3 0 0 1 0 6Z"/>
+                </svg>
+                View more
+              </button> {% endcomment %}
+            </div>
+          </div>
+        {% else %}
+        <h1>{{user.email}}</h1>
+        {% endif %}
+    </div>
+    
+    
+    
+    
+</div>
+{% endblock  %}
+    

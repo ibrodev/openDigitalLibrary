@@ -1,0 +1,11 @@
+
+{% autoescape off %}
+    Hi, {{username}}
+
+    
+    Please use the link below to activate your account
+    
+
+    http://{{domain}}{% url 'odlauth:account_activate' token=token %}
+
+{% endautoescape %}

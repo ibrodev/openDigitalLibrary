@@ -8,27 +8,57 @@
     <div class="flex items-center md:order-2 space-x-3 md:space-x-0 md:ml-8 rtl:space-x-reverse">
         
         {% if user.is_authenticated %}
-        <button type="button" class="relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown" data-dropdown-placement="bottom">
+        <button 
+          type="button" 
+          class="
+            relative 
+            flex 
+            items-center 
+            justify-center 
+            w-max 
+            py-1 
+            px-4 
+            bg-gray-100
+          " 
+          id="user-menu-button" 
+          aria-expanded="false" 
+          data-dropdown-toggle="user-dropdown" 
+          data-dropdown-offset-distance="20" 
+          data-dropdown-offset-skidding="-10" 
+          data-dropdown-placement="bottom"
+          >
             <span class="sr-only">Open user menu</span>
-            <span class="font-medium text-gray-600 dark:text-gray-300">{{user.get_username_first_letter}}</span>
+            <span class="text-gray-600 font-semibold">{{user.get_username}}</span>
+            <svg 
+              class="w-2.5 h-2.5 ms-3" 
+              aria-hidden="true" 
+              xmlns="http://www.w3.org/2000/svg" 
+              fill="none" 
+              viewBox="0 0 10 6"
+            >
+              <path 
+                stroke="currentColor" 
+                stroke-linecap="round" 
+                stroke-linejoin="round" 
+                stroke-width="2" 
+                d="m1 1 4 4 4-4"
+              />
+            </svg>
           </button>
           
         
 
           <!-- Dropdown menu -->
           <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600" id="user-dropdown">
-            <div class="px-4 py-3">
-              <span class="block text-sm text-gray-900 dark:text-white">{{user.get_username}}</span>
-              <span class="block text-sm  text-gray-500 truncate dark:text-gray-400">{{user.get_email}}</span>
-            </div>
+            
             <ul class="py-2" aria-labelledby="user-menu-button">
               <li>
-                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Profile</a>
-              </li>
-              <li>
-                <a href="{% url 'odlauth:account_logout' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign out</a>
+                <a href="{% url 'odlauth:account' %}" class="block px-8 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">My Account</a>
               </li>
             </ul>
+              <div class="py-2">
+                <a href="{% url 'odlauth:account_logout' %}" class="block px-8 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Logout</a>
+              </div>
           </div>    
         {% endif %}
             

@@ -6,6 +6,6 @@ from .views import index
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('account/', include('odlauth.urls')),
+    path('accounts/', include('odlauth.urls')),
     path("", index, name="index")
 ]
