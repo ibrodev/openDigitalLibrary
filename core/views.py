@@ -1,8 +1,12 @@
 from django.shortcuts import render
 
 from django.http.request import HttpRequest
-from django.http.response import HttpResponse
+
+from library.models import Book, Category, BookStatus 
 
 def index(request:HttpRequest):
     
-    return render(request, 'index.html')
+    books = Book.objects.filter(status=BookStatus.ACCEPTED).order_by('-published_on')
+    
+    
+    return render(request, 'index.html', {'books': books})

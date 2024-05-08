@@ -1,6 +1,6 @@
 {% extends "_base.html" %}
 
-
+{% load static %}
 
     
 
@@ -11,6 +11,35 @@
     
     
 {% block main %}
-    <h1>main content</h1>
+
+    <h2 class="text-2xl font-semibold text-slate-700">Recent Additions</h2>
+    
+    {% for book in books %}
+   <div class="grid grid-flow-col auto-cols-max gap-4 py-8">
+
+    <div class="flex flex-wrap gap-4">
+        
+
+<a class="w-52 aspect-[1/1.4] h-auto bg-slate-200/50 p-3 rounded-md flex flex-col" href="{% url 'library:view_book' id=book.id %}">
+    <h3 class="mb-2 text-slate-700 overflow-hidden text-ellipsis">{{book.title}}</h3>
+    <div class="flex-grow">
+        
+        <img class="h-full w-full object-cover object-center rounded-lg" src=" 
+        {% if book.cover %}
+        {{ MEDIA_URL }}{{book.cover}} 
+        {% else %}
+        {% static '/imgs/pdf.png' %}
+        {% endif %}
+             " alt="">
+    </div>
+</a>
+    
+
+</div>
+
+
+</div>
+    {% endfor %}
+        
 {% endblock main %}
     

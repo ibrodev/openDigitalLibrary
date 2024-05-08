@@ -1,0 +1,53 @@
+{% extends "_base.html" %}
+{% load static %}
+
+
+{% block title %}
+    Add Books -
+{% endblock  %}
+    
+
+{% block main %}
+<div class="flex gap-8">
+
+    
+    <aside class="relative w-max">
+            <ul class=" border sticky top-4 p-2 list-none w-max" aria-labelledby="side-menu">
+                <li class="w-full min-w-52">
+                  <a href="{% url 'odlauth:account' %}" class="block px-10 py-2 text-sm text-gray-700 hover:bg-gray-100 ">Account</a>
+                </li>
+                <li class="w-full min-w-52">
+                    <a href="{% url 'odlauth:account_books' %}" class="block px-10 py-2 text-sm text-gray-700 hover:bg-gray-100 ">Books</a>
+                  </li>
+              </ul>
+    </aside>
+
+    <div class="flex-grow">
+
+        
+         <div class="py-8 px-4 mx-auto max-w-screen-xl text-center lg:py-16 z-10 relative">
+        
+            <h1 class="mb-4 text-4xl font-extrabold tracking-tight leading-none text-gray-900 md:text-5xl lg:text-6xl dark:text-white">Add New Book</h1>
+            
+            <form method="post" action="{% url 'library:add_book' %}" class="w-full mx-auto " enctype="multipart/form-data">   
+                
+                {% csrf_token %}
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full mb-5">
+                    {{form}}
+                </div>
+    
+                <input type="hidden" name="next" value="{{ next }}">
+    
+                <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Add Book</button>
+    
+            </form>
+        </div>
+           
+    </div>
+    
+    
+    
+    
+</div>
+{% endblock  %}
+    

@@ -12,10 +12,11 @@ from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.contrib.auth.decorators import login_required
 from django.contrib.sites.shortcuts import get_current_site
 
-from .utils import TokenGenerator, send_activation_email
+from .utils import TokenGenerator, send_activation_email, UserType
 from .forms import AuthorUserForm, AuthorForm, EmailAccountForm, PublisherForm, PublisherUserForm, PhoneNumberForm, UserAuthenticationForm
 from .models import User, Author, Publisher, EmailAccount, PhoneNumber, Profile
 from .tasks import send_activation_link
+from library.models import Book
 
 @cache_control(no_cache=True, must_revalidate=True)
 def logout(request):
@@ -205,3 +206,22 @@ class UserAccountView(LoginRequiredMixin,View):
     def get(self, request, *args, **kwargs):       
         
         return render(request, 'odlauth/pages/account.html')
+    
+
+class AccountBooksView(LoginRequiredMixin,View):
+    
+    def get(self, request, *args, **kwargs):       
+        context = {"books": None}
+        if request.user.user_type ==  UserType.AUTHOR:
+            author = request.user.email.author
+            books = Book.objects.filter(contributer_author=author)
+            
+            context['books'] = books
+            
+        if request.user.user_type == UserType.PUBLISHER:
+            publisher = request.user.email.publisher
+            books = Book.objects.filter(contributer_publisher=publisher)
+        
+            context['books'] = books
+        
+        return render(request, 'odlauth/pages/account_books.html', context=context)

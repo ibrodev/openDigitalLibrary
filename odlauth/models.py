@@ -6,7 +6,6 @@ from django.core.exceptions import ValidationError
 
 from .utils import UserType
 
-
 class EmailAccount(models.Model):
     email = models.EmailField(max_length=255,unique=True)
     is_confirmed = models.BooleanField(default=False)

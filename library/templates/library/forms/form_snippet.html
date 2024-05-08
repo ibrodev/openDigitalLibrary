@@ -28,18 +28,8 @@
 {% for field in form %}
 
         <div >
-
-          
-          {% if field.field.widget.input_type == 'file' %}
-          
-            <label for="{{field.id_for_label}}" class="block mb-2 text-sm text-left font-medium text-gray-900 dark:text-white">{{field.label}}:</label>
-            {% render_field field class+="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none  aria-[invalid]:bg-red-50 aria-[invalid]:border-red-500 aria-[invalid]:text-red-900 aria-[invalid]:focus:ring-red-500 aria-[invalid]:focus:border-red-500" %}
-          {% else %}
-
             <label for="{{field.id_for_label}}" class="block text-left aria-['invalid']:border-red-300 mb-2 text-sm font-medium text-gray-900">{{field.label}}:</label>
             {% render_field field class+="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 aria-[invalid]:bg-red-50 aria-[invalid]:border-red-500 aria-[invalid]:text-red-900 aria-[invalid]:focus:ring-red-500 aria-[invalid]:focus:border-red-500" %}
-          {% endif %}
-            
 
             
             {% for error in field.errors %}

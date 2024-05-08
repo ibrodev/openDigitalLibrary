@@ -1,9 +1,10 @@
 from django.urls import path
-from .views import AccountView, AuthorAccountView, PublisherAccountView, UserLoginView, logout, UserAccountView, activate_account
+from .views import AccountView, AuthorAccountView, PublisherAccountView, UserLoginView, logout, UserAccountView, activate_account, AccountBooksView
 
 app_name = 'odlauth'
 urlpatterns = [
     path('account/', UserAccountView.as_view(), name="account"),
+    path('books/', AccountBooksView.as_view(), name="account_books"),
     path('new/', AccountView.as_view(), name="new_account"),
     path('new/author/', AuthorAccountView.as_view(), name="new_account_author"),
     path('new/publisher/', PublisherAccountView.as_view(), name="new_account_publisher"),

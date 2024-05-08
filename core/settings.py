@@ -19,10 +19,18 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# MEDIA
+MEDIA_ROOT = Path.joinpath(BASE_DIR, 'media')
+MEDIA_URL = 'media/'
+
 
 # Application definition
 
 INSTALLED_APPS = [
+    
+    'compressor',
+    'widget_tweaks',
+    
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -30,12 +38,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     
-    'compressor',
-    'widget_tweaks',
+    
     
     # project apps
     'core',
     'odlauth',
+    'library',
 ]
 
 MIDDLEWARE = [
@@ -63,6 +71,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.media',
             ],
         },
     },
@@ -137,7 +146,9 @@ COMPRESS_ROOT = BASE_DIR / 'static'
 
 COMPRESS_ENABLED = True
 
-STATICFILES_FINDERS = ('compressor.finders.CompressorFinder',)
+STATICFILES_FINDERS = ('compressor.finders.CompressorFinder',"django.contrib.staticfiles.finders.FileSystemFinder",
+    "django.contrib.staticfiles.finders.AppDirectoriesFinder",)
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field

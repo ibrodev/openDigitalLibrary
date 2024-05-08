@@ -1,0 +1,152 @@
+{% extends "_base.html" %}
+{% load static %}
+
+
+{% block title %}
+    {{user.get_username}}'s Books -
+{% endblock  %}
+    
+
+{% block main %}
+<div class="flex gap-8">
+
+    
+    <aside class="relative w-max">
+            <ul class=" border sticky top-4 p-2 list-none w-max" aria-labelledby="side-menu">
+                <li class="w-full min-w-52">
+                  <a href="{% url 'odlauth:account' %}" class="block px-10 py-2 text-sm text-gray-700 hover:bg-gray-100 ">Account</a>
+                </li>
+                <li class="w-full min-w-52">
+                    <a href="{% url 'odlauth:account_books' %}" class="block px-10 py-2 text-sm text-gray-700 hover:bg-gray-100 ">Books</a>
+                  </li>
+              </ul>
+    </aside>
+
+    <div class="flex-grow">
+
+        {% if not user.email.is_confirmed %}
+        <div id="alert-additional-content-1" class="p-4 mb-4 text-yellow-800 border border-yellow-300 rounded-lg bg-yellow-50 " role="alert">
+            <div class="flex items-center">
+              <svg class="flex-shrink-0 w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+              </svg>
+              <span class="sr-only">Info</span>
+              <h3 class="text-lg font-medium">Account activation required!</h3>
+            </div>
+            <div class="mt-2 mb-4 text-sm">
+            We have sent an activation link to <span class="font-semibold">{{user.email}}</span>. Please follow the link to activate your account.
+            </div>
+            
+          </div>
+        {% else %}
+         <div 
+            class="
+                flex justify-end
+            "
+         >
+            <a href="{% url 'library:add_book' %}" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 gap-4">
+               
+                  
+                Add Book
+                <svg class="w-10 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 21">
+                    <path fill-rule="evenodd" d="M13 11.15V4a1 1 0 1 0-2 0v7.15L8.78 8.374a1 1 0 1 0-1.56 1.25l4 5a1 1 0 0 0 1.56 0l4-5a1 1 0 1 0-1.56-1.25L13 11.15Z" clip-rule="evenodd"/>
+                    <path fill-rule="evenodd" d="M9.657 15.874 7.358 13H5a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-4a2 2 0 0 0-2-2h-2.358l-2.3 2.874a3 3 0 0 1-4.685 0ZM17 16a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2H17Z" clip-rule="evenodd"/>
+                  </svg>
+                </a>
+         </div>
+         <div>
+            
+            {% if books %}
+            
+                
+
+            <div class="mb-4 border-b border-gray-200 dark:border-gray-700">
+                <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="default-styled-tab" data-tabs-toggle="#default-styled-tab-content" data-tabs-active-classes="text-purple-600 hover:text-purple-600 dark:text-purple-500 dark:hover:text-purple-500 border-purple-600 dark:border-purple-500" data-tabs-inactive-classes="dark:border-transparent text-gray-500 hover:text-gray-600 dark:text-gray-400 border-gray-100 hover:border-gray-300 dark:border-gray-700 dark:hover:text-gray-300" role="tablist">
+                    <li class="me-2" role="presentation">
+                        <button class="inline-block p-4 border-b-2 rounded-t-lg" id="all-styled-tab" data-tabs-target="#styled-all" type="button" role="tab" aria-controls="all" aria-selected="false">All Books</button>
+                    </li>
+                    <li class="me-2" role="presentation">
+                        <button class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="waiting-approval-styled-tab" data-tabs-target="#styled-waiting-approval" type="button" role="tab" aria-controls="waiting-approval" aria-selected="false">Waiting Approval</button>
+                    </li>
+                </ul>
+            </div>
+            <div id="default-styled-tab-content">
+                <div class="hidden p-4 " id="styled-all" role="tabpanel" aria-labelledby="all-tab">
+                    
+
+                <div class="flex flex-wrap gap-4">
+
+                    
+                   
+                        
+                    {% for book in books %}
+                    <div class="w-44 aspect-[1/1.4] h-auto bg-slate-200/50 p-3 rounded-md flex flex-col">
+                            <h3 class="mb-2 text-slate-700 overflow-hidden text-ellipsis">{{book.title}}</h3>
+                            <div class="flex-grow">
+                                
+                                <img class="h-full w-full object-cover object-center rounded-lg" src=" 
+                                {% if book.cover %}
+                                {{ MEDIA_URL }}{{book.cover}} 
+                                {% else %}
+                                {% static '/imgs/pdf.png' %}
+                                {% endif %}
+                                     " alt="">
+                            </div>
+                        </div>
+                    {% endfor %}
+                        
+                
+                </div>
+
+                </div>
+                <div class="hidden p-4" id="styled-waiting-approval" role="tabpanel" aria-labelledby="waiting-approval-tab">
+                    <div class="grid grid-flow-col auto-cols-max gap-4">
+
+                        <div class="flex flex-wrap gap-4">
+                            
+                    {% for book in books %}
+                    
+                    {% if book.status == "PENDING" %}
+                    <div class="w-44 aspect-[1/1.4] h-auto bg-slate-200/50 p-3 rounded-md flex flex-col">
+                        <h3 class="mb-2 text-slate-700 overflow-hidden text-ellipsis">{{book.title}}</h3>
+                        <div class="flex-grow">
+                            
+                            <img class="h-full w-full object-cover object-center rounded-lg" src=" 
+                            {% if book.cover %}
+                            {{ MEDIA_URL }}{{book.cover}} 
+                            {% else %}
+                            {% static '/imgs/pdf.png' %}
+                            {% endif %}
+                                 " alt="">
+                        </div>
+                    </div>
+                    {% endif %}
+                        
+                    
+                    {% endfor %}
+                </div>
+
+                    
+                    </div>
+                   
+                </div>
+              
+            </div>
+                    
+            {% else %}
+            <div class="p-4 rounded-lg bg-gray-50 mt-4 overflow-hidden" >
+                <h2 class="font-semibold text-center my-4 text-ellipsis ">No Book Found!</h2>
+                <p class="text-sm text-gray-500 dark:text-gray-400 text-center">You are yet to contribute a book, <strong class="font-medium text-gray-800 dark:text-white">plsease use the above button to make your first contribution</strong>. <em class="block text-blue-600 text-base">Let's educate our Ethiopia together. </em></p>
+            </div>
+            {% endif %}
+                
+         </div>
+        {% endif %}
+    </div>
+    
+    
+    
+    
+</div>
+{% endblock  %}
+    
