@@ -72,3 +72,17 @@ class ViewBook(View):
             raise Http404()
         
         return render(request, 'library/pages/single_book.html', {'book': book})
+    
+class SearchView(View):
+    
+    def get(self, request, *args, **kwargs):
+        
+        t = request.GET['t'].strip()
+                
+        if not t and t == '':
+            
+            return redirect(reverse('index'))
+        
+        result = Book.objects.filter(status=BookStatus.ACCEPTED).filter(title__icontains=t)
+        
+        return render(request, 'library/pages/search_result.html', {'result': result, 't': t})

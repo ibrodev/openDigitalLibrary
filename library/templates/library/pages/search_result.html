@@ -1,0 +1,64 @@
+{% extends "_base.html" %}
+{% load static %}
+
+
+{% block title %}
+    Search -
+{% endblock  %}
+    
+
+{% block jambotron %}
+    
+
+<section class="bg-blue-800">
+    <div class="py-8 px-4 mx-auto max-w-screen-xl text-center md:py-28 z-10 relative">
+        <form class="w-full max-w-xl mx-auto" method='GET' action="{% url 'library:search_book' %}">   
+            <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
+            <div class="relative">
+                
+                <input type="search" id="default-search" name="t" value="{{t}}" class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search through more than {{books.count}} books" required />
+                <button type="submit" class="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Search</button>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock jambotron %}
+{% block main %}
+
+<div class="flex gap-8 flex-col">
+
+    
+
+        
+        {% if not result %}
+        <h1 class="text-4xl font-bold text-center">No result found for: <span class="italic">{{t}}</span></h1>
+        {% else %}
+        <h1 class="text-4xl font-bold">Search result for: <span class="italic">{{t}}</span></h1>
+        
+        {% for r in result %}
+        <div class="flex gap-4 border-b border-slate-600 pb-1 items-end">
+            
+            
+            <div>
+                
+                <img class="h-auto w-20 aspect-[1/1.4] object-cover object-center" src=" 
+                {% if r.cover %}
+                {{ MEDIA_URL }}{{r.cover}} 
+                {% else %}
+                {% static '/imgs/pdf.png' %}
+                {% endif %}
+                     " alt="">
+            </div>
+            <a href="{% url 'library:view_book' id=r.id %}" class="mb-2 text-blue-600 overflow-hidden text-2xl italic hover:text-blue-700 hover:underline">{{r.title}}</a>
+            </div>
+                {% endfor %}
+                
+        {% endif %}
+            
+
+
+</div>
+
+
+{% endblock  %}
+    

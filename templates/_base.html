@@ -37,17 +37,15 @@
             
     </header>
 
-    <main class="w-full max-w-screen-xl mx-auto p-4 overflow-hidden">
+    <main class="w-full max-w-screen-xl mx-auto p-4 overflow-hidden min-h-screen">
         {% block main %}
             
         {% endblock %}
     </main>
     
-    <footer>
+    <footer class="bg-white  m-4">
         
-        {% block footer %}
-            
-        {% endblock %}
+        {% include 'components/footer.html' %}
             
     </footer>
         
